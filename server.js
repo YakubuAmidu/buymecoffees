@@ -7,9 +7,11 @@ const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const xss = require('xss-clean');
 const hpp = require('hpp');
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 dotenv.config();
+
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
 const app = express();
 
 // Allowed domains

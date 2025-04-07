@@ -1,0 +1,183 @@
+@use './variables';
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.hero {
+  text-align: center;
+  margin-bottom: 2rem;
+  animation: fadeInDown 1.2s ease;
+
+  .coffee-icon {
+    width: 200px;
+    height: 150px;
+    border-radius: 15px;
+    margin-bottom: 1rem;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    color: variables.$color-purple;
+  }
+
+  .tagline {
+    font-size: 1.2rem;
+    color: variables.$color-text-light;
+  }
+
+  .support-text {
+    font-size: 1rem;
+    color: variables.$color-text-light;
+    margin-top: 0.5rem;
+  }
+}
+
+.donation-card {
+  background-color: variables.$color-dark-gray;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 0 20px variables.$color-card-shadow;
+  animation: fadeInUp 1.2s ease;
+
+  .description {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: variables.$color-white;
+  }
+
+  input[type="number"] {
+    width: 100%;
+    padding: 0.8rem;
+    border-radius: 10px;
+    border: none;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    background-color: #2b2b2b;
+    color: variables.$color-white;
+    transition: all 0.3s ease;
+
+    &::placeholder {
+      color: (variables.$color-white, 25%);
+      opacity: 0.7;
+      font-style: italic;
+    }
+
+    &:focus {
+      outline: none;
+      background-color: #3a3a3a;
+      border: 1px solid variables.$color-purple;
+      box-shadow: 0 0 10px variables.$color-purple;
+    }
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 8px variables.$color-purple;
+    background-color: #3a3a3a;
+  }
+}
+
+button {
+  background-color: variables.$color-purple;
+  color: variables.$color-white;
+  padding: 0.8rem 2rem;
+  border: none;
+  border-radius: 30px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-block;
+
+  &:hover {
+    background-color: variables.$color-purple-dark;
+    transform: scale(1.05);
+    box-shadow: 0 0 12px variables.$color-card-shadow;
+  }
+}
+
+footer {
+  text-align: center;
+  margin-top: 3rem;
+
+  .footer-text {
+    margin-bottom: 1rem;
+    color: variables.$color-text-light;
+  }
+
+  .social-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+
+    .social-icon {
+      font-size: 1.5rem;
+      color: variables.$color-white;
+      transition: color 0.3s ease, transform 0.3s ease;
+
+      &:hover {
+        color: variables.$color-purple;
+        transform: scale(1.2);
+      }
+    }
+  }
+}
+
+.form-message {
+  margin-top: 1rem;
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 1rem;
+  text-align: center;
+  background-color: variables.$color-dark-gray;
+  color: variables.$color-white;
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
+  animation: fadeIn 0.8s ease;
+
+  &.success {
+    border-left: 5px solid variables.$color-purple;
+  }
+
+  &.error {
+    border-left: 5px solid red;
+    color: #ffb3b3;
+  }
+
+  &.hidden {
+    display: none;
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

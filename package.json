@@ -1,0 +1,32 @@
+{
+  "name": "buymecoffee",
+  "version": "1.0.0",
+  "description": "Donation web app",
+  "main": "index.js",
+  "scripts": {
+    "sass": "sass sass/main.scss css/main.css",
+    "watch:sass": "sass sass/main.scss css/main.css --watch",
+    "serve": "live-server ./ --port=8080 --no-browser",
+    "backend": "nodemon server.js",
+    "dev": "concurrently \"npm run watch:sass\" \"npm run serve\" \"npm run backend\""
+  },
+  "author": "Yakubu",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "live-server": "^1.2.2",
+    "nodemon": "^3.1.9",
+    "sass": "^1.86.0"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.1.0",
+    "hpp": "^0.2.3",
+    "morgan": "^1.10.0",
+    "stripe": "^17.7.0",
+    "xss-clean": "^0.1.4"
+  }
+}

@@ -1,0 +1,70 @@
+@use './variables';
+
+.result-page {
+  background-color: variables.$color-black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: 'Poppins', sans-serif;
+  padding: 2rem;
+}
+
+.result-card {
+  background-color: variables.$color-dark-gray;
+  color: variables.$color-white;
+  text-align: center;
+  padding: 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 0 25px variables.$color-card-shadow;
+  max-width: 480px;
+  animation: fadeInUp 1.2s ease;
+
+  h1 {
+    font-size: 2.2rem;
+    color: variables.$color-purple;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    font-size: 1.1rem;
+    color: variables.$color-text-light;
+    margin-bottom: 2rem;
+  }
+
+  .back-home {
+    background-color: variables.$color-purple;
+    color: variables.$color-white;
+    padding: 0.7rem 1.5rem;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: variables.$color-purple-dark;
+      transform: scale(1.05);
+      box-shadow: 0 0 15px variables.$color-card-shadow;
+    }
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .result-card {
+    padding: 1.5rem;
+
+    h1 {
+      font-size: 1.6rem;
+    }
+
+    p {
+      font-size: 1rem;
+    }
+
+    .back-home {
+      font-size: 0.95rem;
+      padding: 0.6rem 1.2rem;
+    }
+  }
+}

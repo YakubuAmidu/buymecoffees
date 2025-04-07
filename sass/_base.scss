@@ -1,0 +1,16 @@
+@use './variables';
+
+*, **{
+  background-color: variables.$color-black;
+  font-size: 20px;
+  line-height: 1.8;
+}
+
+body {
+ margin: 0;
+ padding: 0;
+ box-sizing: border-box;
+ background-color: variables.$color-black;
+ font-family: 'Poppins', sans-serif;
+color: variables.$color-purple;
+}

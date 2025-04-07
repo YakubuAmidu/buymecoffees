@@ -4,11 +4,12 @@
   "description": "Donation web app",
   "main": "index.js",
   "scripts": {
-    "sass": "sass sass/main.scss css/main.css",
-    "watch:sass": "sass sass/main.scss css/main.css --watch",
-    "serve": "live-server ./ --port=8080 --no-browser",
-    "backend": "nodemon server.js",
-    "dev": "concurrently \"npm run watch:sass\" \"npm run serve\" \"npm run backend\""
+  "start": "node server.js",
+  "sass": "sass sass/main.scss css/main.css",
+  "watch:sass": "sass sass/main.scss css/main.css --watch",
+  "serve": "live-server ./ --port=8080 --no-browser",
+  "backend": "nodemon server.js",
+  "dev": "concurrently \"npm run watch:sass\" \"npm run serve\" \"npm run backend\""
   },
   "author": "Yakubu",
   "license": "ISC",

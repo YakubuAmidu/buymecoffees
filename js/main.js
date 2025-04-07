@@ -11,7 +11,7 @@ document.querySelector('.donation-form').addEventListener('submit', async functi
   }
 
   try {
-    const response = await fetch('https://buymecoffees.org/create-checkout-session', {
+    const response = await fetch('https://buymecoffees-app.onrender.com/create-checkout-session', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ amount })

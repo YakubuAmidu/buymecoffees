@@ -7,6 +7,7 @@ const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const xss = require('xss-clean');
 const hpp = require('hpp');
+const bodyParser = require('body-parser');
 
 dotenv.config();
 
@@ -41,7 +42,6 @@ app.use(helmet());
 app.use(morgan("dev"));
 app.use(xss());
 app.use(hpp());
-app.use(express.json());
 
 // Rate Limiting
 app.use(rateLimit({
@@ -49,6 +49,14 @@ app.use(rateLimit({
   max: 100,
   message: '⚠️ Too many requests. Try again in 15 mins.'
 }));
+
+app.use(
+  express.json({
+    verify: (req, res, buf) => {
+      req.rawBody = buf; // Store raw body for webhook verification
+    },
+  })
+);
 
 // Stripe Checkout Session Route
 app.post('/create-checkout-session', async (req, res) => {
@@ -82,6 +90,38 @@ app.post('/create-checkout-session', async (req, res) => {
     res.status(500).json({ error: 'Stripe session error' });
   }
 });
+
+// Stripe needs the raw body to verify the webhook signature
+app.use('/webhook', bodyParser.raw({ type: 'application/json' }));
+
+// ✅ JSON
+app.use(express.json());
+
+// ✅ Stripe webhook event
+app.post('/webhook', (req, res) => {
+  const sig = req.headers['stripe-signature'];
+  const endpointSecrete = process.env.STRIPE_WEBHOOK_SECRET;
+
+  let event;
+
+  try {
+    event.stripes.webhooks.constructEvent(req.body, sig, endpointSecrete);
+    console.log('✅ Webhook verified: ', event.type);
+  } catch (error) {
+    console.error('❌ Webhook Signature verification failed:', error.message);
+    return res.status(400).send(`Webhook Eror: ${error.message}`);
+  }
+
+  // ✅ Handle the event
+  if (event.type === 'checkout.session.completed') {
+    const session = event.data.object;
+    console.log('💰 Payment Success Session: ', session);
+    // TODO: You can log donation or trigger thank-you email, etc
+  }
+
+  res.status(200).json({ received: true });
+});
+
 
 // Home Test Route
 app.get('/', (req, res) => {

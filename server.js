@@ -1,28 +1,26 @@
-const dotenv = require('dotenv');
+// server.js
 const express = require('express');
-const morgan = require('morgan');
+const dotenv = require('dotenv');
+const cors = require('cors');
 const helmet = require('helmet');
+const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const xss = require('xss-clean');
 const hpp = require('hpp');
-const cors = require('cors');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 dotenv.config();
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const app = express();
 
-// ✅ Allowed Origins (include your latest ngrok URL)
+// Allowed domains
 const allowedOrigins = [
-  "http://127.0.0.1:8080",
   "http://localhost:8080",
-  "http://localhost:5173",
-  "http://127.0.0.1:4040",
-  "https://buymecoffees.org",
-  "https://1c6e-2607-fb90-bda8-5e9c-f864-bec6-4f88-6996.ngrok-free.app"
+  "http://127.0.0.1:8080",
+  "https://buymecoffees.org"
 ];
 
-// ✅ CORS Middleware
-const corsOptions = {
+// CORS setup
+app.use(cors({
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
@@ -31,37 +29,26 @@ const corsOptions = {
       callback(new Error("Not allowed by CORS"));
     }
   },
-  methods: ["GET", "POST", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true
-};
+  credentials: true,
+  methods: ["GET", "POST"],
+  allowedHeaders: ["Content-Type"]
+}));
 
-app.use(cors(corsOptions));
-app.options("*", cors(corsOptions)); // Handle preflight requests
-
-// ✅ Debug incoming request info
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.url}`);
-  console.log("🛰️ Origin:", req.headers.origin || "Direct Browser Request");
-  next();
-});
-
-// ✅ Other security middlewares
+// Security & body parsing middleware
 app.use(helmet());
+app.use(morgan("dev"));
 app.use(xss());
 app.use(hpp());
 app.use(express.json());
-app.use(morgan('dev'));
 
-// ✅ Rate Limiter
-const limiter = rateLimit({
+// Rate Limiting
+app.use(rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
-  message: 'Too many requests from this IP. Try again after 15 minutes.'
-});
-app.use(limiter);
+  message: '⚠️ Too many requests. Try again in 15 mins.'
+}));
 
-// ✅ Stripe Checkout Endpoint
+// Stripe Checkout Session Route
 app.post('/create-checkout-session', async (req, res) => {
   const { amount } = req.body;
 
@@ -77,31 +64,30 @@ app.post('/create-checkout-session', async (req, res) => {
         price_data: {
           currency: 'usd',
           product_data: {
-            name: 'Buy me a coffee ☕',
+            name: '☕ Buy Me a Coffee',
           },
-          unit_amount: amount * 100, // in cents
+          unit_amount: amount * 100,
         },
-        quantity: 1,
+        quantity: 1
       }],
       success_url: 'https://buymecoffees.org/success.html',
-      cancel_url: 'https://buymecoffees.org/cancel.html',
+      cancel_url: 'https://buymecoffees.org/cancel.html'
     });
 
     res.status(200).json({ url: session.url });
-  } catch (error) {
-    console.error("❌ Stripe session error:", error.message);
-    res.status(500).json({ error: 'Unable to create checkout session' });
+  } catch (err) {
+    console.error('❌ Stripe Error:', err.message);
+    res.status(500).json({ error: 'Stripe session error' });
   }
 });
 
-// ✅ Home Route for testing
-app.get("/", (req, res) => {
-  res.send("✅ Server is live & working with Stripe & CORS!");
+// Home Test Route
+app.get('/', (req, res) => {
+  res.send('☕ Buy Me a Coffee API is live!');
 });
 
-const port = process.env.PORT || 8080;
-app.listen(port, () => {
-  console.log(`🚀 Server running on port ${port}`);
-});
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+
 
 

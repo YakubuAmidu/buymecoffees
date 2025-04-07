@@ -6,14 +6,12 @@ document.querySelector('.donation-form').addEventListener('submit', async functi
   messageBox.classList.add('hidden');
 
   if (!amount || amount <= 0) {
-    messageBox.textContent = "⚠️ Please enter a valid amount!";
-    messageBox.className = "form-message error";
-    messageBox.classList.remove('hidden');
+    showMessage('error', '⚠️ Please enter a valid amount!');
     return;
   }
 
   try {
-    const response = await fetch('https://558e-2607-fb90-bda8-5e9c-f864-bec6-4f88-6996.ngrok-free.app/create-checkout-session', {
+    const response = await fetch('https://buymecoffees.org/create-checkout-session', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ amount })
@@ -22,22 +20,26 @@ document.querySelector('.donation-form').addEventListener('submit', async functi
     const data = await response.json();
 
     if (data.url) {
-      messageBox.textContent = "✅ Redirecting to payment...";
-      messageBox.className = "form-message success";
-      messageBox.classList.remove('hidden');
-      setTimeout(() => window.location.href = data.url, 1500);
+      showMessage('success', '✅ Redirecting to Stripe checkout...');
+      setTimeout(() => {
+        window.location.href = data.url;
+      }, 1000);
     } else {
-      messageBox.textContent = "❌ Something went wrong!";
-      messageBox.className = "form-message error";
-      messageBox.classList.remove('hidden');
+      showMessage('error', '❌ Something went wrong. Try again!');
     }
-  } catch (err) {
-    console.error("❌ Fetch error:", err);
-    messageBox.textContent = "❌ Server error — please try again!";
-    messageBox.className = "form-message error";
-    messageBox.classList.remove('hidden');
+  } catch (error) {
+    console.error("❌ Server error:", error);
+    showMessage('error', '❌ Server issue — try again later!');
   }
 });
+
+function showMessage(type, text) {
+  const messageBox = document.getElementById('form-message');
+  messageBox.textContent = text;
+  messageBox.className = `form-message ${type}`;
+  messageBox.classList.remove('hidden');
+}
+
 
 
 
